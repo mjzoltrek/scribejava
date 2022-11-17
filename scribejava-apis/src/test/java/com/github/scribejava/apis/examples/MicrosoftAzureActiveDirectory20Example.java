@@ -19,13 +19,14 @@ public class MicrosoftAzureActiveDirectory20Example {
     private MicrosoftAzureActiveDirectory20Example() {
     }
 
+    @SuppressWarnings("PMD.SystemPrintln")
     public static void main(String... args) throws IOException, InterruptedException, ExecutionException {
         // Replace these with your client id and secret
         final String clientId = "client id here";
         final String clientSecret = "client secret here";
         final OAuth20Service service = new ServiceBuilder(clientId)
                 .apiSecret(clientSecret)
-                .scope("openid User.Read")
+                .defaultScope("openid User.Read")
                 .callback("http://www.example.com/oauth_callback/")
                 .build(MicrosoftAzureActiveDirectory20Api.instance());
         final Scanner in = new Scanner(System.in, "UTF-8");
@@ -41,8 +42,7 @@ public class MicrosoftAzureActiveDirectory20Example {
         System.out.print(">>");
         final String code = in.nextLine();
         System.out.println();
-        // Trade the Request Token and Verfier for the Access Token
-        System.out.println("Trading the Request Token for an Access Token...");
+        System.out.println("Trading the Authorization Code for an Access Token...");
         final OAuth2AccessToken accessToken = service.getAccessToken(code);
         System.out.println("Got the Access Token!");
         System.out.println("(The raw response looks like this: " + accessToken.getRawResponse() + "')");
@@ -51,11 +51,12 @@ public class MicrosoftAzureActiveDirectory20Example {
         System.out.println("Now we're going to access a protected resource...");
         final OAuthRequest request = new OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL);
         service.signRequest(accessToken, request);
-        final Response response = service.execute(request);
-        System.out.println("Got it! Lets see what we found...");
-        System.out.println();
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
+        try (Response response = service.execute(request)) {
+            System.out.println("Got it! Lets see what we found...");
+            System.out.println();
+            System.out.println(response.getCode());
+            System.out.println(response.getBody());
+        }
         System.out.println();
         System.out.println("Thats it man! Go and build something awesome with ScribeJava! :)");
     }

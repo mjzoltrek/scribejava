@@ -21,6 +21,7 @@ public class WunderlistExample {
     private WunderlistExample() {
     }
 
+    @SuppressWarnings("PMD.SystemPrintln")
     public static void main(String... args) throws IOException, InterruptedException, ExecutionException {
         // Replace these with your own values
         final String apiKey = "apiKey";
@@ -31,7 +32,6 @@ public class WunderlistExample {
         final OAuth20Service service = new ServiceBuilder(apiKey)
                 .apiSecret(apiSecret)
                 .callback(callbackUrl)
-                .debug()
                 .build(WunderlistAPI.instance());
 
         final String code;
@@ -61,12 +61,12 @@ public class WunderlistExample {
         System.out.println("Now we're going to access a protected resource...");
         final OAuthRequest request = new OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL);
         service.signRequest(accessToken, request);
-        final Response response = service.execute(request);
-        System.out.println("Got it! Lets see what we found...");
-        System.out.println();
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
-
+        try (Response response = service.execute(request)) {
+            System.out.println("Got it! Lets see what we found...");
+            System.out.println();
+            System.out.println(response.getCode());
+            System.out.println(response.getBody());
+        }
         System.out.println();
         System.out.println("Thats it man! Go and build something awesome with ScribeJava! :)");
     }

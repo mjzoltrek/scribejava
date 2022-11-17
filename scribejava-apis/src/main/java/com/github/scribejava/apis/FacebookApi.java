@@ -1,5 +1,7 @@
 package com.github.scribejava.apis;
 
+import java.io.OutputStream;
+
 import com.github.scribejava.apis.facebook.FacebookAccessTokenJsonExtractor;
 import com.github.scribejava.apis.facebook.FacebookService;
 import com.github.scribejava.core.builder.api.DefaultApi20;
@@ -10,17 +12,13 @@ import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth2.clientauthentication.ClientAuthentication;
 import com.github.scribejava.core.oauth2.clientauthentication.RequestBodyAuthenticationScheme;
-import java.io.OutputStream;
 
-/**
- * Facebook API
- */
 public class FacebookApi extends DefaultApi20 {
 
     private final String version;
 
     protected FacebookApi() {
-        this("2.11");
+        this("3.2");
     }
 
     protected FacebookApi(String version) {
@@ -71,10 +69,10 @@ public class FacebookApi extends DefaultApi20 {
     }
 
     @Override
-    public FacebookService createService(String apiKey, String apiSecret, String callback, String scope,
-            OutputStream debugStream, String responseType, String userAgent, HttpClientConfig httpClientConfig,
+    public FacebookService createService(String apiKey, String apiSecret, String callback, String defaultScope,
+            String responseType, OutputStream debugStream, String userAgent, HttpClientConfig httpClientConfig,
             HttpClient httpClient) {
-        return new FacebookService(this, apiKey, apiSecret, callback, scope, responseType, userAgent, httpClientConfig,
-                httpClient);
+        return new FacebookService(this, apiKey, apiSecret, callback, defaultScope, responseType, debugStream,
+                userAgent, httpClientConfig, httpClient);
     }
 }

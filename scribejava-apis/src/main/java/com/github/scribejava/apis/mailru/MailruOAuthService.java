@@ -1,13 +1,15 @@
 package com.github.scribejava.apis.mailru;
 
+import com.github.scribejava.apis.MailruApi;
 import java.net.URLDecoder;
 import java.util.Map;
 import java.util.TreeMap;
-import com.github.scribejava.core.builder.api.DefaultApi20;
 import com.github.scribejava.core.httpclient.HttpClient;
 import com.github.scribejava.core.httpclient.HttpClientConfig;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.oauth.OAuth20Service;
+
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.security.MessageDigest;
@@ -16,9 +18,11 @@ import java.util.Formatter;
 
 public class MailruOAuthService extends OAuth20Service {
 
-    public MailruOAuthService(DefaultApi20 api, String apiKey, String apiSecret, String callback, String scope,
-            String responseType, String userAgent, HttpClientConfig httpClientConfig, HttpClient httpClient) {
-        super(api, apiKey, apiSecret, callback, scope, responseType, userAgent, httpClientConfig, httpClient);
+    public MailruOAuthService(MailruApi api, String apiKey, String apiSecret, String callback, String defaultScope,
+            String responseType, OutputStream debugStream, String userAgent, HttpClientConfig httpClientConfig,
+            HttpClient httpClient) {
+        super(api, apiKey, apiSecret, callback, defaultScope, responseType, debugStream, userAgent, httpClientConfig,
+                httpClient);
     }
 
     @Override

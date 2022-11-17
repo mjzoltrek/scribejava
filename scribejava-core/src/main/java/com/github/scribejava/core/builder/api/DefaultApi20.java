@@ -1,5 +1,6 @@
 package com.github.scribejava.core.builder.api;
 
+import com.github.scribejava.core.extractors.DeviceAuthorizationJsonExtractor;
 import com.github.scribejava.core.extractors.OAuth2AccessTokenJsonExtractor;
 import com.github.scribejava.core.extractors.TokenExtractor;
 import com.github.scribejava.core.httpclient.HttpClient;
@@ -13,6 +14,7 @@ import com.github.scribejava.core.oauth2.bearersignature.BearerSignature;
 import com.github.scribejava.core.oauth2.bearersignature.BearerSignatureAuthorizationRequestHeaderField;
 import com.github.scribejava.core.oauth2.clientauthentication.ClientAuthentication;
 import com.github.scribejava.core.oauth2.clientauthentication.HttpBasicAuthenticationScheme;
+
 import java.io.OutputStream;
 import java.util.Map;
 
@@ -29,7 +31,7 @@ import java.util.Map;
  * fine-tune the process. Please read the javadocs of the interfaces to get an idea of what to do.
  *
  */
-public abstract class DefaultApi20 implements BaseApi<OAuth20Service> {
+public abstract class DefaultApi20 {
 
     /**
      * Returns the access token extractor.
@@ -106,12 +108,11 @@ public abstract class DefaultApi20 implements BaseApi<OAuth20Service> {
         return parameters.appendTo(getAuthorizationBaseUrl());
     }
 
-    @Override
-    public OAuth20Service createService(String apiKey, String apiSecret, String callback, String scope,
-            OutputStream debugStream, String responseType, String userAgent, HttpClientConfig httpClientConfig,
+    public OAuth20Service createService(String apiKey, String apiSecret, String callback, String defaultScope,
+            String responseType, OutputStream debugStream, String userAgent, HttpClientConfig httpClientConfig,
             HttpClient httpClient) {
-        return new OAuth20Service(this, apiKey, apiSecret, callback, scope, responseType, userAgent, httpClientConfig,
-                httpClient);
+        return new OAuth20Service(this, apiKey, apiSecret, callback, defaultScope, responseType, debugStream, userAgent,
+                httpClientConfig, httpClient);
     }
 
     public BearerSignature getBearerSignature() {
@@ -120,5 +121,20 @@ public abstract class DefaultApi20 implements BaseApi<OAuth20Service> {
 
     public ClientAuthentication getClientAuthentication() {
         return HttpBasicAuthenticationScheme.instance();
+    }
+
+    /**
+     * RFC 8628 OAuth 2.0 Device Authorization Grant
+     *
+     * @see <a href="https://tools.ietf.org/html/rfc8628">RFC 8628</a>
+     * @return the device authorization endpoint
+     */
+    public String getDeviceAuthorizationEndpoint() {
+        throw new UnsupportedOperationException(
+                "This API doesn't support Device Authorization Grant or we have no info about this");
+    }
+
+    public DeviceAuthorizationJsonExtractor getDeviceAuthorizationExtractor() {
+        return DeviceAuthorizationJsonExtractor.instance();
     }
 }

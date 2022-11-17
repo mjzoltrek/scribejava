@@ -6,6 +6,7 @@ import com.github.scribejava.core.httpclient.HttpClient;
 import com.github.scribejava.core.httpclient.HttpClientConfig;
 import com.github.scribejava.core.model.OAuthConstants;
 import com.github.scribejava.core.model.ParameterList;
+
 import java.io.OutputStream;
 import java.util.Map;
 
@@ -15,6 +16,7 @@ public class ImgurApi extends DefaultApi20 {
     }
 
     private static class InstanceHolder {
+
         private static final ImgurApi INSTANCE = new ImgurApi();
     }
 
@@ -55,11 +57,11 @@ public class ImgurApi extends DefaultApi20 {
     }
 
     @Override
-    public ImgurOAuthService createService(String apiKey, String apiSecret, String callback, String scope,
-            OutputStream debugStream, String responseType, String userAgent, HttpClientConfig httpClientConfig,
+    public ImgurOAuthService createService(String apiKey, String apiSecret, String callback, String defaultScope,
+            String responseType, OutputStream debugStream, String userAgent, HttpClientConfig httpClientConfig,
             HttpClient httpClient) {
-        return new ImgurOAuthService(this, apiKey, apiSecret, callback, scope, responseType, userAgent,
-                httpClientConfig, httpClient);
+        return new ImgurOAuthService(this, apiKey, apiSecret, callback, defaultScope, responseType, debugStream,
+                userAgent, httpClientConfig, httpClient);
     }
 
     public static boolean isOob(String callback) {

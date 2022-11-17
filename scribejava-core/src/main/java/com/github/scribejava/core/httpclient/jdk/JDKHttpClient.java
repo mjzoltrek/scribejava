@@ -1,10 +1,9 @@
 package com.github.scribejava.core.httpclient.jdk;
 
 import com.github.scribejava.core.exceptions.OAuthException;
-import com.github.scribejava.core.httpclient.multipart.BodyPartPayload;
 import com.github.scribejava.core.httpclient.HttpClient;
-import com.github.scribejava.core.httpclient.multipart.ByteArrayBodyPartPayload;
 import com.github.scribejava.core.httpclient.multipart.MultipartPayload;
+import com.github.scribejava.core.httpclient.multipart.MultipartUtils;
 import com.github.scribejava.core.model.OAuthAsyncRequestCallback;
 import com.github.scribejava.core.model.OAuthConstants;
 import com.github.scribejava.core.model.OAuthRequest;
@@ -115,7 +114,13 @@ public class JDKHttpClient implements HttpClient {
 
     private Response doExecute(String userAgent, Map<String, String> headers, Verb httpVerb, String completeUrl,
             BodyType bodyType, Object bodyContents) throws IOException {
-        final HttpURLConnection connection = (HttpURLConnection) new URL(completeUrl).openConnection();
+        final URL url = new URL(completeUrl);
+        final HttpURLConnection connection;
+        if (config.getProxy() == null) {
+            connection = (HttpURLConnection) url.openConnection();
+        } else {
+            connection = (HttpURLConnection) url.openConnection(config.getProxy());
+        }
         connection.setInstanceFollowRedirects(config.isFollowRedirects());
         connection.setRequestMethod(httpVerb.name());
         if (config.getConnectTimeout() != null) {
@@ -192,7 +197,10 @@ public class JDKHttpClient implements HttpClient {
     private static void addBody(HttpURLConnection connection, byte[] content, boolean requiresBody) throws IOException {
         final int contentLength = content.length;
         if (requiresBody || contentLength > 0) {
-            prepareConnectionForBodyAndGetOutputStream(connection, contentLength).write(content);
+            final OutputStream outputStream = prepareConnectionForBodyAndGetOutputStream(connection, contentLength);
+            if (contentLength > 0) {
+                outputStream.write(content);
+            }
         }
     }
 
@@ -204,54 +212,13 @@ public class JDKHttpClient implements HttpClient {
         }
 
         if (requiresBody) {
-            final ByteArrayOutputStream os = getPayload(multipartPayload);
-
-            if (os.size() > 0) {
-                os.writeTo(prepareConnectionForBodyAndGetOutputStream(connection, os.size()));
+            final ByteArrayOutputStream os = MultipartUtils.getPayload(multipartPayload);
+            final int contentLength = os.size();
+            final OutputStream outputStream = prepareConnectionForBodyAndGetOutputStream(connection, contentLength);
+            if (contentLength > 0) {
+                os.writeTo(outputStream);
             }
         }
-    }
-
-    static ByteArrayOutputStream getPayload(MultipartPayload multipartPayload) throws IOException {
-        final ByteArrayOutputStream os = new ByteArrayOutputStream();
-
-        final String preamble = multipartPayload.getPreamble();
-        if (preamble != null) {
-            os.write(preamble.getBytes());
-        }
-        final List<BodyPartPayload> bodyParts = multipartPayload.getBodyParts();
-        if (!bodyParts.isEmpty()) {
-            final String boundary = multipartPayload.getBoundary();
-            final byte[] startBoundary = ("\r\n--" + boundary + "\r\n").getBytes();
-
-            for (BodyPartPayload bodyPart : bodyParts) {
-                os.write(startBoundary);
-
-                final Map<String, String> bodyPartHeaders = bodyPart.getHeaders();
-                if (bodyPartHeaders != null) {
-                    for (Map.Entry<String, String> header : bodyPartHeaders.entrySet()) {
-                        os.write((header.getKey() + ": " + header.getValue() + "\r\n").getBytes());
-                    }
-                }
-
-                if (bodyPart instanceof MultipartPayload) {
-                    getPayload((MultipartPayload) bodyPart).writeTo(os);
-                } else if (bodyPart instanceof ByteArrayBodyPartPayload) {
-                    os.write("\r\n".getBytes());
-                    os.write(((ByteArrayBodyPartPayload) bodyPart).getPayload());
-                } else {
-                    throw new AssertionError(bodyPart.getClass());
-                }
-            }
-
-            os.write(("\r\n--" + boundary + "--\r\n").getBytes());
-            final String epilogue = multipartPayload.getEpilogue();
-            if (epilogue != null) {
-                os.write((epilogue + "\r\n").getBytes());
-            }
-
-        }
-        return os;
     }
 
     private static OutputStream prepareConnectionForBodyAndGetOutputStream(HttpURLConnection connection,
@@ -264,5 +231,4 @@ public class JDKHttpClient implements HttpClient {
         connection.setDoOutput(true);
         return connection.getOutputStream();
     }
-
 }

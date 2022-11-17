@@ -21,6 +21,7 @@ public class AutomaticExample {
     private AutomaticExample() {
     }
 
+    @SuppressWarnings("PMD.SystemPrintln")
     public static void main(String... args) throws IOException, InterruptedException, ExecutionException {
         // Replace these with your client id and secret
         final String clientId = "your client id";
@@ -29,7 +30,7 @@ public class AutomaticExample {
         final OAuth20Service service = new ServiceBuilder(clientId)
                 .apiSecret(clientSecret)
                 .callback("http://www.example.com/oauth_callback/")
-                .scope("scope:user:profile").debug()
+                .defaultScope("scope:user:profile")
                 .build(AutomaticAPI.instance());
         final Scanner in = new Scanner(System.in, "UTF-8");
 
@@ -70,12 +71,12 @@ public class AutomaticExample {
         System.out.println("Now we're going to access a protected resource...");
         final OAuthRequest request = new OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL);
         service.signRequest(accessToken, request);
-        final Response response = service.execute(request);
-        System.out.println("Got it! Lets see what we found...");
-        System.out.println();
-        System.out.println(response.getCode());
-        System.out.println(response.getBody());
-
+        try (Response response = service.execute(request)) {
+            System.out.println("Got it! Lets see what we found...");
+            System.out.println();
+            System.out.println(response.getCode());
+            System.out.println(response.getBody());
+        }
         System.out.println();
         System.out.println("Thats it man! Go and build something awesome with ScribeJava! :)");
     }

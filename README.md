@@ -17,7 +17,7 @@ OAuthService service = new ServiceBuilder(YOUR_API_KEY)
 
 That **single line** (added newlines for readability) is the only thing you need to configure ScribeJava with LinkedIn's OAuth API for example.
 
-Working runnable examples are [here](https://github.com/scribejava/scribejava/tree/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples)
+Working executable examples are [here](https://github.com/scribejava/scribejava/tree/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples)
 Common usage: [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/Google20Example.java)
 
 ### Threadsafe
@@ -36,6 +36,7 @@ ScribeJava support out-of-box several HTTP clients:
  * Async Http Client asynchttpclient 2.x (maven module scribejava-httpclient-ahc) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/Google20AsyncAHCExample.java)
  * OkHttp (maven module scribejava-httpclient-okhttp) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/GitHubAsyncOkHttpExample.java)
  * Apache HttpComponents HttpClient (maven module scribejava-httpclient-apache) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/FacebookAsyncApacheExample.java)
+ * Armeria HTTP client (required >= java 8) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/Google20ArmeriaExample.java)
  * any externally created HTTP client [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/VkontakteExternalHttpExample.java)
 
  just add corresponding maven modules to your pom
@@ -49,8 +50,10 @@ ScribeJava support out-of-box several HTTP clients:
   * [RFC 6750](https://tools.ietf.org/html/rfc6750) The OAuth 2.0 Authorization Framework: Bearer Token Usage
   * [RFC 7636](https://tools.ietf.org/html/rfc7636) Proof Key for Code Exchange by OAuth Public Clients (PKCE), [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/Google20WithPKCEExample.java)
   * [RFC 7009](https://tools.ietf.org/html/rfc7009) OAuth 2.0 Token Revocation, [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/Google20RevokeExample.java)
+  * [RFC 8628](https://tools.ietf.org/html/rfc8628) OAuth 2.0 Device Authorization Grant [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/Google20DeviceAuthorizationGrantExample.java)
+  * [RFC 5849](https://tools.ietf.org/html/rfc5849) The OAuth 1.0 Protocol, [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/TwitterExample.java)
 
-### Supports all major 1.0a and 2.0 OAuth APIs out-of-the-box
+### Supports all (50+) major 1.0a and 2.0 OAuth APIs out-of-the-box
 
 * Asana (https://asana.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/AsanaExample.java)
 * Automatic (https://www.automatic.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/AutomaticExample.java)
@@ -60,6 +63,7 @@ ScribeJava support out-of-box several HTTP clients:
 * Digg (http://digg.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/DiggExample.java)
 * Discord (https://discordapp.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/DiscordExample.java)
 * Доктор на работе (https://www.doktornarabote.ru/)
+* Dropbox (https://www.dropbox.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/DropboxExample.java)
 * Etsy (https://www.etsy.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/EtsyExample.java)
 * Facebook (https://www.facebook.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/FacebookExample.java), [example with Async Apache HTTP client](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/FacebookAsyncApacheExample.java), [example with Async Ning HTTP client](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/FacebookAsyncNingExample.java)
 * Fitbit (https://www.fitbit.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/FitbitApi20Example.java)
@@ -73,24 +77,28 @@ ScribeJava support out-of-box several HTTP clients:
 * HeadHunter ХэдХантер (https://hh.ru/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/HHExample.java)
 * HiOrg-Server (https://www.hiorg-server.de/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/HiOrgServerExample.java)
 * Imgur (http://imgur.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/ImgurExample.java)
+* Instagram (https://www.instagram.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/InstagramExample.java)
 * Kaixin 开心网 (http://www.kaixin001.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/Kaixin20Example.java)
+* Kakao (https://kakao.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/KakaoExample.java)
 * Keycloak (https://www.keycloak.org/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/KeycloakExample.java)
 * LinkedIn (https://www.linkedin.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/LinkedIn20Example.java), [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/LinkedInExample.java), [example with custom scopes](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/LinkedInExampleWithScopes.java)
 * Mail.Ru (https://mail.ru/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/MailruExample.java), [example with Async Ning HTTP Client](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/MailruAsyncExample.java)
 * MediaWiki (https://www.mediawiki.org/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/MediaWikiExample.java)
-* Meetup (http://www.meetup.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/MeetupExample.java)
+* Meetup (https://www.meetup.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/Meetup20Example.java), [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/MeetupExample.java)
 * Microsoft Azure Active Directory (Azure AD) (http://azure.microsoft.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/MicrosoftAzureActiveDirectoryExample.java)
 * Microsoft Azure Active Directory (Azure AD) 2.0 (http://azure.microsoft.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/MicrosoftAzureActiveDirectory20Example.java)
 * Microsoft Live (https://login.live.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/LiveExample.java)
 * Misfit (http://misfit.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/MisfitExample.java)
 * NAVER (http://www.naver.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/NaverExample.java)
 * Odnoklassniki Одноклассники (http://ok.ru/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/OdnoklassnikiExample.java)
+* Polar (https://www.polar.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/PolarAPIExample.java)
 * Pinterest (https://www.pinterest.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/PinterestExample.java)
 * 500px (https://500px.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/Px500Example.java)
 * Renren (http://renren.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/RenrenExample.java)
 * Salesforce (https://www.salesforce.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/SalesforceExample.java), [example with Async Ning HTTP Client](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/SalesforceNingAsyncExample.java)
 * Sina (http://www.sina.com.cn/ http://weibo.com/login.php) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/SinaWeibo2Example.java), [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/SinaWeiboExample.java)
 * Skyrock (http://skyrock.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/SkyrockExample.java)
+* Slack (https://slack.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/SlackExample.java)
 * StackExchange (http://stackexchange.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/StackExchangeExample.java)
 * The Things Network (v1-staging and v2-preview) (https://www.thethingsnetwork.org/) [example v1](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/TheThingsNetworkV1StagingExample.java), [example v2 preview](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/TheThingsNetworkV2PreviewExample.java)
 * Trello (https://trello.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/TrelloExample.java)
@@ -101,6 +109,7 @@ ScribeJava support out-of-box several HTTP clients:
 * Viadeo (http://viadeo.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/ViadeoExample.java)
 * VK ВКонтакте (http://vk.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/VkontakteExample.java), [example Client Credentials Grant](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/VkontakteClientCredentialsGrantExample.java), [example with External HTTP Client](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/VkontakteExternalHttpExample.java)
 * Wunderlist (https://www.wunderlist.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/WunderlistExample.java)
+* Xero (https://www.xero.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/XeroExample.java)
 * XING (https://www.xing.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/XingExample.java)
 * Yahoo (https://www.yahoo.com/) [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/Yahoo20Example.java), [example](https://github.com/scribejava/scribejava/blob/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples/YahooExample.java)
 * check the [examples folder](https://github.com/scribejava/scribejava/tree/master/scribejava-apis/src/test/java/com/github/scribejava/apis/examples)
@@ -128,7 +137,7 @@ You can pull ScribeJava from the central maven repository, just add these to you
 <dependency>
     <groupId>com.github.scribejava</groupId>
     <artifactId>scribejava-apis</artifactId>
-    <version>6.3.0</version>
+    <version>8.3.2</version>
 </dependency>
 ```
 
@@ -137,7 +146,7 @@ And in case you need just core classes (that's it, without any external API (FB,
 <dependency>
     <groupId>com.github.scribejava</groupId>
     <artifactId>scribejava-core</artifactId>
-    <version>6.3.0</version>
+    <version>8.3.2</version>
 </dependency>
 ```
 
@@ -149,7 +158,10 @@ First of all, Pull Requests are welcome, the second option is [donations](https:
 
 When you will send the pull request. That's the way for a majority of changes here.
 Or you can ask someone to make the paid job for you.
-In some cases, when I'm interested in changes (technicaly or financialey), I can implement the request myself.
+In some cases, when I'm interested in changes (technically or financially), I can implement the request myself.
+
+## Paid consulting
+If you or your business depends on the Scribejava and you need any specific improvement or new feature not currently implemented in the Scribejava, consider contacting me about a paid job.
 
 ## Getting started in less than 2 minutes
 

@@ -1,7 +1,7 @@
 package com.github.scribejava.core.model;
 
 import com.github.scribejava.core.exceptions.OAuthException;
-import com.github.scribejava.core.httpclient.multipart.FileByteArrayBodyPartPayload;
+import com.github.scribejava.core.httpclient.multipart.BodyPartPayload;
 import com.github.scribejava.core.httpclient.multipart.MultipartPayload;
 import java.io.File;
 import java.io.IOException;
@@ -160,98 +160,13 @@ public class OAuthRequest {
         this.multipartPayload = new MultipartPayload(subtype, boundary, headers);
     }
 
-    public void setByteArrayBodyPartPayloadInMultipartPayload(byte[] bodyPartPayload) {
+    public void setBodyPartPayloadInMultipartPayload(BodyPartPayload bodyPartPayload) {
         initMultipartPayload();
-        addByteArrayBodyPartPayloadInMultipartPayload(bodyPartPayload);
+        addBodyPartPayloadInMultipartPayload(bodyPartPayload);
     }
 
-    public void setByteArrayBodyPartPayloadInMultipartPayload(byte[] bodyPartPayload, String contentType) {
-        initMultipartPayload();
-        addByteArrayBodyPartPayloadInMultipartPayload(bodyPartPayload, contentType);
-    }
-
-    public void setByteArrayBodyPartPayloadInMultipartPayload(byte[] bodyPartPayload, Map<String, String> headers) {
-        initMultipartPayload();
-        addByteArrayBodyPartPayloadInMultipartPayload(bodyPartPayload, headers);
-    }
-
-    public void addByteArrayBodyPartPayloadInMultipartPayload(byte[] bodyPartPayload) {
+    public void addBodyPartPayloadInMultipartPayload(BodyPartPayload bodyPartPayload) {
         multipartPayload.addBodyPart(bodyPartPayload);
-    }
-
-    public void addByteArrayBodyPartPayloadInMultipartPayload(byte[] bodyPartPayload, String contentType) {
-        multipartPayload.addBodyPart(bodyPartPayload, contentType);
-    }
-
-    public void addByteArrayBodyPartPayloadInMultipartPayload(byte[] bodyPartPayload, Map<String, String> headers) {
-        multipartPayload.addBodyPart(bodyPartPayload, headers);
-    }
-
-    public void setFileByteArrayBodyPartPayloadInMultipartPayload(byte[] fileContent) {
-        initMultipartPayload();
-        addFileByteArrayBodyPartPayloadInMultipartPayload(fileContent);
-    }
-
-    public void setFileByteArrayBodyPartPayloadInMultipartPayload(String contentType, byte[] fileContent) {
-        initMultipartPayload();
-        addFileByteArrayBodyPartPayloadInMultipartPayload(contentType, fileContent);
-    }
-
-    public void setFileByteArrayBodyPartPayloadInMultipartPayload(byte[] fileContent, String name) {
-        initMultipartPayload();
-        addFileByteArrayBodyPartPayloadInMultipartPayload(fileContent, name);
-    }
-
-    public void setFileByteArrayBodyPartPayloadInMultipartPayload(String contentType, byte[] fileContent, String name) {
-        initMultipartPayload();
-        addFileByteArrayBodyPartPayloadInMultipartPayload(contentType, fileContent, name);
-    }
-
-    public void setFileByteArrayBodyPartPayloadInMultipartPayload(byte[] fileContent, String name, String filename) {
-        initMultipartPayload();
-        addFileByteArrayBodyPartPayloadInMultipartPayload(fileContent, name, filename);
-    }
-
-    public void setFileByteArrayBodyPartPayloadInMultipartPayload(String contentType, byte[] fileContent, String name,
-            String filename) {
-        initMultipartPayload();
-        addFileByteArrayBodyPartPayloadInMultipartPayload(contentType, fileContent, name, filename);
-    }
-
-    public void setFileByteArrayBodyPartPayloadInMultipartPayload(
-            FileByteArrayBodyPartPayload fileByteArrayBodyPartPayload) {
-        initMultipartPayload();
-        addFileByteArrayBodyPartPayloadInMultipartPayload(fileByteArrayBodyPartPayload);
-    }
-
-    public void addFileByteArrayBodyPartPayloadInMultipartPayload(byte[] fileContent) {
-        multipartPayload.addFileBodyPart(fileContent);
-    }
-
-    public void addFileByteArrayBodyPartPayloadInMultipartPayload(String contentType, byte[] fileContent) {
-        multipartPayload.addFileBodyPart(contentType, fileContent);
-    }
-
-    public void addFileByteArrayBodyPartPayloadInMultipartPayload(byte[] fileContent, String name) {
-        multipartPayload.addFileBodyPart(fileContent, name);
-    }
-
-    public void addFileByteArrayBodyPartPayloadInMultipartPayload(String contentType, byte[] fileContent, String name) {
-        multipartPayload.addFileBodyPart(contentType, fileContent, name);
-    }
-
-    public void addFileByteArrayBodyPartPayloadInMultipartPayload(byte[] fileContent, String name, String filename) {
-        multipartPayload.addFileBodyPart(fileContent, name, filename);
-    }
-
-    public void addFileByteArrayBodyPartPayloadInMultipartPayload(String contentType, byte[] fileContent, String name,
-            String filename) {
-        multipartPayload.addFileBodyPart(contentType, fileContent, name, filename);
-    }
-
-    public void addFileByteArrayBodyPartPayloadInMultipartPayload(
-            FileByteArrayBodyPartPayload fileByteArrayBodyPartPayload) {
-        multipartPayload.addBodyPart(fileByteArrayBodyPartPayload);
     }
 
     /**
@@ -400,6 +315,15 @@ public class OAuthRequest {
 
     public interface ResponseConverter<T> {
 
+        /**
+         * Implementations of this method should close provided Response in case response is not included in the return
+         * Object of type &lt;T&gt; Then responsibility to close response is in on the
+         * {@link com.github.scribejava.core.model.OAuthAsyncRequestCallback#onCompleted(java.lang.Object) }
+         *
+         * @param response response
+         * @return T
+         * @throws IOException IOException
+         */
         T convert(Response response) throws IOException;
     }
 

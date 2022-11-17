@@ -27,7 +27,7 @@ public class SalesforceNingAsyncExample {
     private SalesforceNingAsyncExample() {
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"unchecked", "rawtypes", "PMD.SystemPrintln"})
     public static void main(String... args) throws InterruptedException, ExecutionException,
             UnsupportedEncodingException, IOException, NoSuchAlgorithmException, KeyManagementException {
         // Replace these with your client id and secret
@@ -91,10 +91,11 @@ public class SalesforceNingAsyncExample {
             System.out.println();
             System.out.println("Full URL: " + url);
             final OAuthRequest request = new OAuthRequest(Verb.GET, url);
-            final Response response = service.execute(request);
             System.out.println();
-            System.out.println(response.getCode());
-            System.out.println(response.getBody());
+            try (Response response = service.execute(request)) {
+                System.out.println(response.getCode());
+                System.out.println(response.getBody());
+            }
         }
     }
 }

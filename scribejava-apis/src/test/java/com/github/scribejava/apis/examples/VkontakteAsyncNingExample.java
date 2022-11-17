@@ -1,37 +1,47 @@
 package com.github.scribejava.apis.examples;
 
+import com.github.scribejava.httpclient.ning.NingHttpClientConfig;
+import com.ning.http.client.AsyncHttpClientConfig;
 import java.util.Random;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
-import com.github.scribejava.apis.FacebookApi;
+import com.github.scribejava.apis.VkontakteApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
-import com.github.scribejava.httpclient.apache.ApacheHttpClientConfig;
 import java.io.IOException;
 
-public class FacebookAsyncApacheExample {
+public class VkontakteAsyncNingExample {
 
-    private static final String NETWORK_NAME = "Facebook";
-    private static final String PROTECTED_RESOURCE_URL = "https://graph.facebook.com/v2.11/me";
+    private static final String NETWORK_NAME = "vk.com";
+    private static final String PROTECTED_RESOURCE_URL = "https://api.vk.com/method/users.get?v="
+            + VkontakteApi.VERSION;
 
-    private FacebookAsyncApacheExample() {
+    private VkontakteAsyncNingExample() {
     }
 
+    @SuppressWarnings("PMD.SystemPrintln")
     public static void main(String... args) throws InterruptedException, ExecutionException, IOException {
         // Replace these with your client id and secret
         final String clientId = "your client id";
         final String clientSecret = "your client secret";
         final String secretState = "secret" + new Random().nextInt(999_999);
+        final NingHttpClientConfig clientConfig = new NingHttpClientConfig(new AsyncHttpClientConfig.Builder()
+                .setMaxConnections(5)
+                .setRequestTimeout(10_000)
+                .setAllowPoolingConnections(false)
+                .setPooledConnectionIdleTimeout(1_000)
+                .setReadTimeout(1_000)
+                .build());
 
-        try (OAuth20Service service = new ServiceBuilder(clientId)
+        try ( OAuth20Service service = new ServiceBuilder(clientId)
                 .apiSecret(clientSecret)
                 .callback("http://www.example.com/oauth_callback/")
-                .httpClientConfig(ApacheHttpClientConfig.defaultConfig())
-                .build(FacebookApi.instance())) {
+                .httpClientConfig(clientConfig)
+                .build(VkontakteApi.instance())) {
             final Scanner in = new Scanner(System.in, "UTF-8");
 
             System.out.println("=== " + NETWORK_NAME + "'s Async OAuth Workflow ===");
@@ -61,8 +71,7 @@ public class FacebookAsyncApacheExample {
                 System.out.println();
             }
 
-            // Trade the Request Token and Verfier for the Access Token
-            System.out.println("Trading the Request Token for an Access Token...");
+            System.out.println("Trading the Authorization Code for an Access Token...");
             final OAuth2AccessToken accessToken = service.getAccessTokenAsync(code).get();
             System.out.println("Got the Access Token!");
             System.out.println("(The raw response looks like this: " + accessToken.getRawResponse()
@@ -73,12 +82,12 @@ public class FacebookAsyncApacheExample {
             System.out.println("Now we're going to access a protected resource...");
             final OAuthRequest request = new OAuthRequest(Verb.GET, PROTECTED_RESOURCE_URL);
             service.signRequest(accessToken, request);
-            final Response response = service.execute(request);
-            System.out.println("Got it! Lets see what we found...");
-            System.out.println();
-            System.out.println(response.getCode());
-            System.out.println(response.getBody());
-
+            try ( Response response = service.execute(request)) {
+                System.out.println("Got it! Lets see what we found...");
+                System.out.println();
+                System.out.println(response.getCode());
+                System.out.println(response.getBody());
+            }
             System.out.println();
             System.out.println("Thats it man! Go and build something awesome with ScribeJava! :)");
         }
